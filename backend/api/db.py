@@ -4,12 +4,19 @@ from sqlalchemy.orm import sessionmaker, relationship
 import os
 import uuid
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Database configuration
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+# Ensure we're using the correct dialect name for PostgreSQL
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 # Create SQLAlchemy engine
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL or "postgresql://")
 
 # Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -63,4 +70,8 @@ class Activity(Base):
     room_id = Column(String, ForeignKey("rooms.id", ondelete="CASCADE"))
 
     # Relationships
-    room = relationship("Room", back_populates="activities") 
+    room = relationship("Room", back_populates="activities")
+
+# Create all tables
+def init_db():
+    Base.metadata.create_all(bind=engine) 
