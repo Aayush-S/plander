@@ -31,7 +31,6 @@ const popularEmojis = [
   "🎉",
   "🎈",
   "🎁",
-  "��",
   "🎂",
   "🍰",
   "🍜",
@@ -40,12 +39,9 @@ const popularEmojis = [
   "🌊",
   "🌅",
   "🌇",
-  "��",
   "🚁",
   "🛶",
-  "��",
   "🏄",
-  "🧗",
 ];
 
 export default function AddActivity() {

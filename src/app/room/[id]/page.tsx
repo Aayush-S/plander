@@ -70,9 +70,6 @@ export default function RoomPage() {
                 {room.destination}
               </div>
             </div>
-            <button className="p-3 rounded-full hover:bg-white/50 backdrop-blur-sm transition-all duration-200">
-              <Settings className="w-6 h-6" />
-            </button>
           </div>
 
           {/* Room Info Card */}
@@ -93,7 +90,9 @@ export default function RoomPage() {
                 <div className="text-lg font-bold text-gray-900">
                   {activities.length - currentIndex}
                 </div>
-                <p className="text-sm text-gray-500">activities left</p>
+                <p className="text-sm text-gray-500">
+                  activities left to review
+                </p>
               </div>
             </div>
 

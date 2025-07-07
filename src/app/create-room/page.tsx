@@ -12,6 +12,7 @@ export default function CreateRoom() {
     startDate: "",
     endDate: "",
     creatorName: "",
+    tripAdvisorSuggestions: false,
   });
 
   const [isCreating, setIsCreating] = useState(false);
@@ -190,6 +191,36 @@ export default function CreateRoom() {
                   className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 font-medium"
                   required
                 />
+              </div>
+
+              <div className="flex items-center justify-between py-2">
+                <label className="block text-sm font-bold text-gray-700 mb-0 flex items-center">
+                  <MapPin className="inline w-4 h-4 mr-1" />
+                  TripAdvisor Suggestions
+                </label>
+                <button
+                  type="button"
+                  aria-pressed={formData.tripAdvisorSuggestions}
+                  onClick={() =>
+                    setFormData({
+                      ...formData,
+                      tripAdvisorSuggestions: !formData.tripAdvisorSuggestions,
+                    })
+                  }
+                  className={`relative inline-flex h-7 w-14 border-2 border-gray-200 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    formData.tripAdvisorSuggestions
+                      ? "bg-blue-500 border-blue-500"
+                      : "bg-gray-200"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-6 w-6 rounded-full bg-white shadow transform transition-transform duration-200 ${
+                      formData.tripAdvisorSuggestions
+                        ? "translate-x-7"
+                        : "translate-x-0"
+                    }`}
+                  />
+                </button>
               </div>
             </div>
           </div>
