@@ -12,10 +12,10 @@ A collaborative trip planning app with Tinder-style voting for activities. Plan 
 
 ## 🛠️ Public TODOs
 
-- [] Refactor backend to a simpler architecture
-- [] Fully connect frontend to backend
-- [] Auth for voting
-- [] TripAdvisor API to add location based activities
+- [ ] Refactor backend to a simpler architecture
+- [ ] Fully connect frontend to backend
+- [ ] Auth for voting
+- [ ] TripAdvisor API to add location based activities
 
 ## 🛠️ Installation
 
