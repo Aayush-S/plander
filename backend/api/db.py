@@ -37,6 +37,7 @@ class Room(Base):
     __tablename__ = "rooms"
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    code = Column(String, nullable=False)
     name = Column(String, nullable=False)
     destination = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)

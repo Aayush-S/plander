@@ -62,13 +62,29 @@ export default function AddActivity() {
     setIsSubmitting(true);
 
     // Simulate activity submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    // TODO: Submit activity to room
-    console.log("Adding activity:", formData);
+    const roomCode = params.code as string;
+
+    const response = await fetch(`/activities/${roomCode}/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to add activity");
+    }
+
+    const data = await response.json();
+
+    console.log("Adding activity:", data);
 
     // Redirect back to room
-    router.push(`/room/${roomId}`);
+    router.push(`/room/${roomCode}`);
   };
 
   return (

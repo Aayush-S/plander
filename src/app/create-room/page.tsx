@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { ArrowLeft, MapPin, Users, Calendar, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { generateRoomCode } from "@/lib/utils";
 
 export default function CreateRoom() {
   const [formData, setFormData] = useState({
@@ -22,12 +21,31 @@ export default function CreateRoom() {
     e.preventDefault();
     setIsCreating(true);
 
-    // Simulate room creation
-    const newRoomCode = generateRoomCode();
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
+    try {
+      const response = await fetch("/rooms/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.tripName,
+          destination: formData.destination,
+          created_by: formData.creatorName,
+        }),
+      });
 
-    setRoomCode(newRoomCode);
-    setIsCreating(false);
+      if (!response.ok) {
+        throw new Error(`Failed to create room: ${response.statusText}`);
+      }
+
+      const room = await response.json();
+      setRoomCode(room.code);
+    } catch (error) {
+      console.error("Error creating room:", error);
+      alert("Failed to create room. Please try again.");
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   if (roomCode) {
@@ -67,7 +85,7 @@ export default function CreateRoom() {
 
           <div className="flex flex-col gap-4">
             <Link
-              href={`/room/${roomCode.toLowerCase()}`}
+              href={`/room/${roomCode}`}
               className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-2xl shadow-xl hover:shadow-green-500/25 transition-all duration-300 transform hover:scale-105 text-center"
             >
               Go to Your Room

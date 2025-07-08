@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowLeft,
   Plus,
@@ -12,24 +12,67 @@ import {
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import SwipeCard from "@/components/SwipeCard";
-import { mockTripRoom, mockActivities } from "@/lib/utils";
+import { Activity, TripRoom } from "@/types";
 
 export default function RoomPage() {
   const params = useParams();
-  const roomId = params.id as string;
+  const roomCode = params.code as string;
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [activities, setActivities] = useState(mockActivities);
-  const room = mockTripRoom;
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [room, setRoom] = useState<TripRoom | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRoom = async () => {
+      try {
+        // Use the original room code without case conversion
+        const response = await fetch(`/rooms/code/${params.code}`, {
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        console.log("Response:", response);
+        if (!response.ok) {
+          throw new Error("Room not found");
+        }
+        const data = await response.json();
+        // Convert date strings to Date objects
+        const parsedRoom = {
+          ...data,
+          createdAt: new Date(data.created_at),
+          createdBy: data.created_by,
+          activities: (data.activities || []).map((activity: any) => ({
+            ...activity,
+            createdAt: new Date(activity.created_at),
+            submittedBy: activity.submitted_by,
+            votes: {
+              yes: activity.votes?.yes || [],
+              no: activity.votes?.no || [],
+            },
+          })),
+          participants: (data.participants || []).map((participant: any) => ({
+            ...participant,
+            joinedAt: new Date(participant.joined_at),
+          })),
+        };
+        setRoom(parsedRoom);
+        setActivities(parsedRoom.activities);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load room");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoom();
+  }, [roomCode]);
 
   const handleSwipe = (activityId: string, direction: "left" | "right") => {
     console.log(`Swiped ${direction} on activity ${activityId}`);
-
-    // Move to next card
     setCurrentIndex((prev) => prev + 1);
-
     // TODO: Record vote in backend
-    // For now, just log it
     const activity = activities.find((a) => a.id === activityId);
     if (activity) {
       console.log(
@@ -37,6 +80,30 @@ export default function RoomPage() {
       );
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  if (error || !room) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex flex-col items-center justify-center p-4">
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          {error || "Room not found"}
+        </h1>
+        <Link
+          href="/"
+          className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+        >
+          Go Home
+        </Link>
+      </div>
+    );
+  }
 
   const currentActivity = activities[currentIndex];
   const nextActivity = activities[currentIndex + 1];
@@ -153,7 +220,7 @@ export default function RoomPage() {
                   or add more ideas!
                 </p>
                 <Link
-                  href={`/room/${roomId}/add-activity`}
+                  href={`/room/${roomCode}/add-activity`}
                   className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-green-500/25 transition-all duration-300 transform hover:scale-105"
                 >
                   <Plus className="w-5 h-5 mr-2 inline" />
@@ -178,7 +245,7 @@ export default function RoomPage() {
           {/* Action Buttons */}
           <div className="flex gap-4 mb-6">
             <Link
-              href={`/room/${roomId}/add-activity`}
+              href={`/room/${roomCode}/add-activity`}
               className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-2xl shadow-xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 text-center"
             >
               <Plus className="w-5 h-5 mr-2 inline" />
