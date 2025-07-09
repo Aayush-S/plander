@@ -6,6 +6,10 @@
 .pnp.js
 .yarn/install-state.gz
 
+# Python
+/backend/api/__pycache__
+/backend/api/logic/__pycache__
+
 # Testing
 /coverage
 
