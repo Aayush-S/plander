@@ -1,46 +1,24 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
-from typing import List, Optional, Dict
-
-class Participant(BaseModel):
-    id: str
-    name: str
-    joined_at: datetime
-
-
-class Vote(BaseModel):
-    vote: bool
-    voter: Participant
-
-
-class ActivityCreate(BaseModel):
-    emoji: str
-    title: str
-    description: Optional[str] = None
-
+from typing import List, Optional
 
 class Activity(BaseModel):
-    id: str
+    id: Optional[str] = None
     emoji: str
     title: str
     description: Optional[str] = None
-    submitted_by: str
-    votes: List[Vote]
-    created_at: datetime
-
-
-class RoomCreate(BaseModel):
-    name: str
-    destination: str
-    created_by: str
-
+    submitted_by: Optional[str] = None
+    votes: list = []
+    created_at: Optional[datetime] = None
+    room_id: Optional[str] = None
+    model_config = ConfigDict(from_attributes=True)
 
 class Room(BaseModel):
-    id: str
-    code: str
+    id: Optional[str] = None
+    code: Optional[str] = None
     name: str
     destination: str
-    created_at: datetime
+    created_at: Optional[datetime] = None
     created_by: str
-    participants: List[Participant] = []
     activities: List[Activity] = []
+    model_config = ConfigDict(from_attributes=True)
