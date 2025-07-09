@@ -7,16 +7,19 @@ const nextConfig = {
     domains: [],
   },
   async rewrites() {
-    return [
-      {
-        source: "/rooms/:path*",
-        destination: "http://localhost:8000/rooms/:path*",
-      },
-      {
-        source: "/activities/:path*",
-        destination: "http://localhost:8000/activities/:path*",
-      },
-    ];
+    if (process.env.NODE_ENV === "development") {
+      return [
+        {
+          source: "/rooms/:path*",
+          destination: "http://localhost:8000/rooms/:path*",
+        },
+        {
+          source: "/activities/:path*",
+          destination: "http://localhost:8000/activities/:path*",
+        },
+      ];
+    }
+    return [];
   },
 };
 

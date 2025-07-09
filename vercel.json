@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/api/app.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/rooms{,/(.*)}",
+      "destination": "/backend/api/app.py"
+    },
+    {
+      "source": "/activities{,/(.*)}",
+      "destination": "/backend/api/app.py"
+    }
+  ]
+}
