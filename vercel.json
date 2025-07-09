@@ -10,14 +10,18 @@
       "use": "@vercel/next"
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/rooms{,/(.*)}",
-      "destination": "/backend/api/app.py"
+      "src": "/rooms(/.*)?",
+      "dest": "/backend/api/app.py"
     },
     {
-      "source": "/activities{,/(.*)}",
-      "destination": "/backend/api/app.py"
+      "src": "/activities(/.*)?",
+      "dest": "/backend/api/app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
