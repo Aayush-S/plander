@@ -10,7 +10,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         self.end_headers()
         
-        response = {"message": "Hello, World!"}
+        response = {"status": "healthy"}
         self.wfile.write(json.dumps(response).encode())
         
     def do_OPTIONS(self):
@@ -18,4 +18,4 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        self.end_headers()
+        self.end_headers() 
