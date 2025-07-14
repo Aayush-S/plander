@@ -4,12 +4,6 @@
       "excludeFiles": "{.next,.git,node_modules}/**"
     }
   },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.py"
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/:path*",
