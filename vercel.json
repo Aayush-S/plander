@@ -1,24 +1,14 @@
 {
   "version": 2,
   "functions": {
-    "backend/api/app.py": {
-      "runtime": "vercel-python@0.8.0",
-      "memory": 1024,
-      "maxDuration": 30
+    "api/main.py": {
+      "runtime": "python3.9"
     }
   },
   "routes": [
     {
-      "src": "/rooms(/.*)?",
-      "dest": "/backend/api/app.py"
-    },
-    {
-      "src": "/activities(/.*)?",
-      "dest": "/backend/api/app.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "src": "/api/(.*)",
+      "dest": "/api/main.py"
     }
   ]
 }
