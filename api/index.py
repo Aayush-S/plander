@@ -1,0 +1,11 @@
+import os
+from fastapi import FastAPI
+from dotenv import load_dotenv
+
+load_dotenv(".env")
+
+app = FastAPI()
+
+@app.get("/")
+def fallback():
+    return {"message": "Hello, World!"}
