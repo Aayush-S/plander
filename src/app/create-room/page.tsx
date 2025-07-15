@@ -22,7 +22,7 @@ export default function CreateRoom() {
     setIsCreating(true);
 
     try {
-      const response = await fetch("/rooms/", {
+      const response = await fetch("/api/rooms", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

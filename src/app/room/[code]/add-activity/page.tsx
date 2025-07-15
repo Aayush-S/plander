@@ -66,13 +66,17 @@ export default function AddActivity() {
 
     const roomCode = params.code as string;
 
-    const response = await fetch(`/activities/${roomCode}/create`, {
+    const response = await fetch(`/api/activities`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        ...formData,
+        room_code: roomCode,
+        submitted_by: "Anonymous", // You can update this with actual user info later
+      }),
     });
 
     if (!response.ok) {

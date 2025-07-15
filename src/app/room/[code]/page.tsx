@@ -28,7 +28,7 @@ export default function RoomPage() {
     const fetchRoom = async () => {
       try {
         // Use the original room code without case conversion
-        const response = await fetch(`/rooms/code/${params.code}`, {
+        const response = await fetch(`/api/rooms/code/${params.code}`, {
           headers: {
             Accept: "application/json",
           },
