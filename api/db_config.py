@@ -9,17 +9,29 @@ load_dotenv()
 
 # Database URL from environment variable
 DATABASE_URL = os.getenv("DATABASE_URL")
-if not DATABASE_URL:
-    raise ValueError("DATABASE_URL environment variable is required")
 
-# Create engine for Neon PostgreSQL
-engine = create_engine(DATABASE_URL, echo=False)
-
-# Create session factory
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Global variables for engine and session
+engine = None
+SessionLocal = None
 
 # Base class for models
 Base = declarative_base()
+
+def get_engine():
+    """Get or create the database engine"""
+    global engine
+    if engine is None:
+        if not DATABASE_URL:
+            raise ValueError("DATABASE_URL environment variable is required")
+        engine = create_engine(DATABASE_URL, echo=False)
+    return engine
+
+def get_session_local():
+    """Get or create the session factory"""
+    global SessionLocal
+    if SessionLocal is None:
+        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=get_engine())
+    return SessionLocal
 
 # Room model
 class Room(Base):
@@ -49,10 +61,13 @@ class Activity(Base):
 
 # Create tables
 def create_tables():
-    Base.metadata.create_all(bind=engine)
+    """Create database tables"""
+    Base.metadata.create_all(bind=get_engine())
 
 # Get database session
 def get_db():
+    """Get a database session"""
+    SessionLocal = get_session_local()
     db = SessionLocal()
     try:
         return db
